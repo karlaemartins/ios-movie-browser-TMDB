@@ -1,147 +1,83 @@
-# Movie App – Network Layer
+# iOS Movie Browser - Projeto de Estudo
 
-Aplicativo iOS desenvolvido em **Swift e UIKit**, com foco no estudo e implementação de uma **Network Layer reutilizável**, consumindo dados da API do **The Movie Database (TMDB)**.
+Aplicativo desenvolvido em **UIKit** para exibição de filmes populares utilizando a API do **The Movie Database (TMDB)**. O projeto foi criado com foco no estudo de arquitetura, consumo de APIs REST e construção de uma **Network Layer reutilizável**, utilizando MVVM e Coordinator.
 
-O aplicativo exibe uma lista de **filmes populares**, permitindo visualizar **poster, gêneros, ano de lançamento e sinopse**.
+## O que o app faz
 
----
-
-## Funcionalidades
-
-* Listagem de filmes populares
-* Exibição do poster do filme
-* Visualização de gêneros e ano de lançamento
-* Tela de detalhes com sinopse
-* Navegação entre telas utilizando **Coordinator + UINavigationController**
-
----
-
-## Objetivo do projeto
-
-Este projeto foi desenvolvido para praticar conceitos fundamentais do desenvolvimento iOS:
-
-* Construção de uma **Network Layer reutilizável**
-* Consumo de **API REST**
-* Decodificação de JSON usando **Codable**
-* Separação de responsabilidades com **MVVM**
-* Implementação do padrão **Coordinator** para controle de navegação
-* Interface construída **programaticamente com UIKit**
-* Uso de **UITableView**
-
----
+- Lista filmes populares
+- Exibe o pôster do filme
+- Mostra gêneros e ano de lançamento
+- Exibe uma tela de detalhes com a sinopse
+- Navega entre telas utilizando Coordinator e UINavigationController
 
 ## Arquitetura
 
-O projeto utiliza uma estrutura baseada em **MVVM** combinada com o padrão **Coordinator**.
+O projeto foi estruturado utilizando **MVVM** combinado com o padrão **Coordinator**, separando responsabilidades entre interface, lógica de apresentação, navegação e comunicação com a API.
 
-Fluxo de dados:
+### Fluxo de dados
 
-View
-↓
-ViewModel
-↓
-Network Layer
-↓
-API
+View → ViewModel → Network Layer → API
 
-Fluxo de navegação:
+### Fluxo de navegação
 
-Coordinator
-↓
-UINavigationController
-↓
-ViewController
+Coordinator → UINavigationController → ViewController
 
-### Camadas do projeto
+## Decisões importantes
 
-**View**
+- UIKit programático (sem Storyboard)
+- Arquitetura MVVM
+- Coordinator Pattern
+- Network Layer reutilizável
+- Consumo de API REST utilizando URLSession
+- Decodificação de JSON utilizando Codable
+- Organização por camadas (View, ViewModel, Model, Network e Coordinator)
 
-Responsável pela interface e interação com o usuário.
+## Estrutura do projeto
 
-* MovieListViewController
-* MovieDetailViewController
-* MovieTableViewCell
+### View
 
-**ViewModel**
+- MovieListViewController
+- MovieDetailViewController
+- MovieTableViewCell
 
-Responsável pela lógica de apresentação e comunicação com a camada de rede.
+### ViewModel
 
-* MovieListViewModel
+- MovieListViewModel
 
-**Model**
+### Model
 
-Representação dos dados retornados pela API.
+- Movie
+- Genre
+- MovieResponse
+- GenreResponse
 
-* Movie
-* Genre
-* MovieResponse
-* GenreResponse
+### Network Layer
 
-**Network Layer**
+- EndPoint
+- HTTPMethod
+- NetworkRequest
+- Services
 
-Responsável pela construção e execução das requisições HTTP.
+### Coordinator
 
-* EndPoint
-* HTTPMethod
-* NetworkRequest
-* Services
+- AppCoordinator
+- HomeCoordinator
 
-**Coordinator**
+## Conceitos praticados
 
-Responsável pelo controle de navegação e fluxo entre telas, desacoplando a navegação das ViewControllers.
-
-* AppCoordinator
-* HomeCoordinator
-
----
-
-## Network Layer
-
-A Network Layer foi construída para ser **genérica e reutilizável**, utilizando protocolos para definir endpoints.
-
----
-
-## 🗂 Estrutura do projeto
-
-NetworkLayer
-    EndPoint.swift
-    HTTPMethod.swift
-    NetworkRequest.swift
-    Services.swift
-
-    Model
-        Movie.swift
-
-    View
-        MovieListViewController.swift
-        MovieDetailViewController.swift
-        MovieTableViewCell.swift
-
-    ViewModel
-        MovieListViewModel.swift
-
-    Coordinators
-        AppCoordinator.swift
-        HomeCoordinator.swift        
----
-
-## Tecnologias utilizadas
-
-* Swift
-* UIKit
-* URLSession
-* Codable
-* MVVM
-* Coordinator
-* AutoLayout
-* UITableView
-
----
+- Swift
+- UIKit
+- URLSession
+- Codable
+- MVVM
+- Coordinator Pattern
+- Auto Layout
+- UITableView
+- Consumo de API REST
+- Decodificação de JSON
 
 ## API utilizada
 
 Este projeto utiliza a API pública do **The Movie Database (TMDB)**.
 
 https://developer.themoviedb.org
-
----
