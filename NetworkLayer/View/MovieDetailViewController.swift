@@ -8,10 +8,9 @@
 import UIKit
 
 class MovieDetailViewController: UIViewController {
-    
+
     private let viewModel: MovieDetailViewModel
-    private let genres: String
-    
+
     private let posterImageView: UIImageView = {
         let iv = UIImageView()
         iv.contentMode = .scaleAspectFill
@@ -20,7 +19,7 @@ class MovieDetailViewController: UIViewController {
         iv.layer.cornerRadius = 8
         return iv
     }()
-    
+
     private let titleLabel: UILabel = {
         let label = UILabel()
         label.font = .boldSystemFont(ofSize: 22)
@@ -29,7 +28,7 @@ class MovieDetailViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let infoLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
@@ -39,7 +38,7 @@ class MovieDetailViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let ratingLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 16)
@@ -66,7 +65,7 @@ class MovieDetailViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
-    
+
     private let detailsStackView: UIStackView = {
         let stack = UIStackView()
         stack.axis = .horizontal
@@ -76,7 +75,7 @@ class MovieDetailViewController: UIViewController {
         stack.translatesAutoresizingMaskIntoConstraints = false
         return stack
     }()
-    
+
     private let overviewLabel: UILabel = {
         let label = UILabel()
         label.font = .systemFont(ofSize: 14)
@@ -86,39 +85,36 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
 
-    
     init(movie: Movie, genres: String) {
-        self.viewModel = MovieDetailViewModel(movie: movie)
-        self.genres = genres
+        self.viewModel = MovieDetailViewModel(movie: movie, genres: genres)
         super.init(nibName: nil, bundle: nil)
     }
-    
+
     required init?(coder: NSCoder) {
         fatalError("init(coder:) não foi implementado")
     }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
 
         setupLayout()
         configure()
-
         fetchMovieDetails()
     }
-    
+
     private func setupLayout() {
-        
+
         detailsStackView.addArrangedSubview(ratingLabel)
         detailsStackView.addArrangedSubview(runtimeLabel)
         detailsStackView.addArrangedSubview(languageLabel)
-        
+
         view.addSubview(posterImageView)
         view.addSubview(titleLabel)
         view.addSubview(infoLabel)
         view.addSubview(detailsStackView)
         view.addSubview(overviewLabel)
-        
+
         NSLayoutConstraint.activate([
             posterImageView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor, constant: 24),
             posterImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
@@ -139,43 +135,33 @@ class MovieDetailViewController: UIViewController {
 
             overviewLabel.topAnchor.constraint(equalTo: detailsStackView.bottomAnchor, constant: 16),
             overviewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
-            overviewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
+            overviewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
         ])
     }
-    
+
     private func configure() {
-        titleLabel.text = viewModel.movie.title
-        let year = viewModel.movie.releaseDate?.prefix(4) ?? "N/A"
-        infoLabel.text = "\(genres)\nLançamento: \(year)"
-        
-        
-        if let overview = viewModel.movie.overview {
-            let paragraphStyle = NSMutableParagraphStyle()
-            paragraphStyle.alignment = .justified
-            
-            let attributedString = NSAttributedString(
-                string: overview,
-                attributes: [.paragraphStyle: paragraphStyle]
-            )
-            overviewLabel.attributedText = attributedString
-        } else {
-            overviewLabel.text = "Sem sinopse disponível."
-        }
-        
-        
+        titleLabel.text = viewModel.title
+        infoLabel.text = viewModel.info
+
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.alignment = .justified
+
+        let attributedString = NSAttributedString(
+            string: viewModel.overview,
+            attributes: [.paragraphStyle: paragraphStyle]
+        )
+
+        overviewLabel.attributedText = attributedString
+
         posterImageView.image = UIImage(systemName: "photo")
 
-        guard let path = viewModel.movie.posterPath else { return }
-
-        let urlString = "https://image.tmdb.org/t/p/w500\(path)"
-
-        guard let url = URL(string: urlString) else { return }
+        guard let url = viewModel.posterURL else { return }
 
         ImageLoader.shared.loadImage(from: url) { [weak self] image in
             self?.posterImageView.image = image
         }
     }
-    
+
     private func fetchMovieDetails() {
         viewModel.fetchMovieDetails { [weak self] in
             DispatchQueue.main.async {
@@ -183,13 +169,10 @@ class MovieDetailViewController: UIViewController {
             }
         }
     }
-    
-    private func updateMovieDetails() {
-        guard let movieDetail = viewModel.movieDetail else { return }
 
-            ratingLabel.text = "⭐ \(movieDetail.voteAverage)"
-            runtimeLabel.text = "⏱️ \(movieDetail.runtime ?? 0) min"
-            languageLabel.text = "🌍 \(movieDetail.originalLanguage.uppercased())"
+    private func updateMovieDetails() {
+        ratingLabel.text = viewModel.ratingText
+        runtimeLabel.text = viewModel.runtimeText
+        languageLabel.text = viewModel.languageText
     }
 }
-
