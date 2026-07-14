@@ -100,8 +100,36 @@ class MovieDetailViewController: UIViewController {
 
         setupLayout()
         configure()
+        configureNavigationBar()
         fetchMovieDetails()
     }
+    
+    private func configureNavigationBar() {
+        navigationController?.navigationBar.tintColor = .label
+        updateFavoriteButton()
+    }
+    
+    private func updateFavoriteButton() {
+        let isFavorite = viewModel.isFavorite
+
+        let favoriteButton = UIBarButtonItem(
+            image: UIImage(systemName: isFavorite ? "heart.fill" : "heart"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapFavorite)
+        )
+
+        favoriteButton.tintColor = isFavorite ? .systemRed : .label
+
+        navigationItem.rightBarButtonItem = favoriteButton
+    }
+    
+    @objc
+    private func didTapFavorite() {
+        viewModel.toggleFavorite()
+        updateFavoriteButton()
+    }
+
 
     private func setupLayout() {
 

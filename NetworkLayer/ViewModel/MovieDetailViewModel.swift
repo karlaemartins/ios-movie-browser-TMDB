@@ -12,14 +12,20 @@ final class MovieDetailViewModel {
     private let apiKey = Secrets.apiKey
     private let language = "pt-BR"
     private let genres: String
+    private let favoritesStorage: FavoritesStorageProtocol
 
     private(set) var movie: Movie
     private(set) var movieDetail: MovieDetail?
    
 
-    init(movie: Movie, genres: String) {
+    init(
+        movie: Movie,
+        genres: String,
+        favoritesStorage: FavoritesStorageProtocol = FavoritesStorageService.shared
+    ) {
         self.movie = movie
         self.genres = genres
+        self.favoritesStorage = favoritesStorage
     }
     
     var title: String {
@@ -62,6 +68,18 @@ final class MovieDetailViewModel {
         guard let movieDetail else { return "🌍 --" }
 
         return "🌍 \(movieDetail.originalLanguage.uppercased())"
+    }
+    
+    var isFavorite: Bool {
+        favoritesStorage.isFavorite(movie)
+    }
+
+    func toggleFavorite() {
+        if isFavorite {
+            favoritesStorage.remove(movie)
+        } else {
+            favoritesStorage.save(movie)
+        }
     }
     
     
