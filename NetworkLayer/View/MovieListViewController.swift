@@ -12,6 +12,7 @@ class MovieListViewController: UIViewController {
     private let viewModel = MovieListViewModel()
     
     var onMovieSelected: ((Movie, String) -> Void)?
+    var onFavoritesSelected: (() -> Void)?
     
     private let tableView: UITableView = {
         let tv = UITableView()
@@ -26,7 +27,26 @@ class MovieListViewController: UIViewController {
         view.backgroundColor = .white
         navigationItem.backButtonTitle = ""
         setupTableView()
+        configureNavigationBar()
         fetchMovies()
+    }
+    
+    private func configureNavigationBar() {
+        navigationItem.title = "Filmes"
+
+        navigationItem.rightBarButtonItem = UIBarButtonItem(
+            image: UIImage(systemName: "heart"),
+            style: .plain,
+            target: self,
+            action: #selector(didTapFavorites)
+        )
+
+        navigationItem.rightBarButtonItem?.tintColor = .label
+    }
+    
+    @objc
+    private func didTapFavorites() {
+        onFavoritesSelected?()
     }
     
     private func setupTableView() {

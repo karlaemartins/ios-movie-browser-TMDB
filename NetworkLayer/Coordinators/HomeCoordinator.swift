@@ -16,17 +16,24 @@ class HomeCoordinator {
     }
 
     func start() {
-            let movieListVC = MovieListViewController()
-            
+        let movieListVC = MovieListViewController()
+
         movieListVC.onMovieSelected = { [weak self] movie, genres in
-               guard let self = self else { return }
-                
-               let detailVC = MovieDetailViewController(movie: movie, genres: genres)
-               self.navigationController.pushViewController(detailVC, animated: true)
-            }
-            
-            navigationController.pushViewController(movieListVC, animated: false)
+            guard let self = self else { return }
+
+            let detailVC = MovieDetailViewController(movie: movie, genres: genres)
+            self.navigationController.pushViewController(detailVC, animated: true)
         }
+
+        movieListVC.onFavoritesSelected = { [weak self] in
+            guard let self = self else { return }
+
+            let favoritesVC = MovieFavoritesViewController()
+            self.navigationController.pushViewController(favoritesVC, animated: true)
+        }
+
+        navigationController.pushViewController(movieListVC, animated: false)
+    }
         
     }
 
