@@ -57,6 +57,12 @@ class MovieTableViewCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
     
+    override func prepareForReuse() {
+        super.prepareForReuse()
+
+        posterImageView.image = UIImage(systemName: "photo")
+    }
+    
     //Layout
     private func setupLayout() {
         contentView.addSubview(posterImageView)
@@ -84,20 +90,15 @@ class MovieTableViewCell: UITableViewCell {
         let year = movie.releaseDate?.prefix(4) ?? "N/A"
         detailsLabel.text = "\(genreNames) | \(year)"
         
-        // Construção da URL da imagem
-        if let path = movie.posterPath {
-            let urlString = "https://image.tmdb.org/t/p/w200\(path)"
-            if let url = URL(string: urlString) {
-                
-                URLSession.shared.dataTask(with: url) { data, _, _ in
-                    guard let data = data else { return }
-                    DispatchQueue.main.async {
-                        self.posterImageView.image = UIImage(data: data)
-                    }
-                }.resume()
-            }
-        } else {
-            posterImageView.image = UIImage(systemName: "photo")
+        // Carregamento da imagem do pôster
+        posterImageView.image = UIImage(systemName: "photo")
+
+        guard let path = movie.posterPath else { return }
+
+        guard let url = URL(string: "https://image.tmdb.org/t/p/w200\(path)") else { return }
+
+        ImageLoader.shared.loadImage(from: url) { [weak self] image in
+            self?.posterImageView.image = image
         }
     }
 }
