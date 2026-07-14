@@ -24,8 +24,14 @@ class MovieFavoritesViewController: UIViewController {
         view.backgroundColor = .systemBackground
 
         setupTableView()
-        viewModel.loadFavorites()
         setupLayout()
+    }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        super.viewWillAppear(animated)
+
+        viewModel.loadFavorites()
+        tableView.reloadData()
     }
     
     private func setupTableView() {
@@ -72,4 +78,12 @@ extension MovieFavoritesViewController: UITableViewDataSource {
 
 extension MovieFavoritesViewController: UITableViewDelegate {
 
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+
+        let movie = viewModel.movie(at: indexPath.row)
+
+        let detailVC = MovieDetailViewController(movie: movie, genres: "")
+
+        navigationController?.pushViewController(detailVC, animated: true)
+    }
 }
