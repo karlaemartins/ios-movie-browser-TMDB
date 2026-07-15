@@ -95,6 +95,7 @@ extension MovieListViewController: UITableViewDataSource {
 //funçao para o clique da célula
 extension MovieListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        tableView.deselectRow(at: indexPath, animated: true)
         let movie = viewModel.popularMovies[indexPath.row]
         let genres = viewModel.genreNames(for: movie).joined(separator: ", ")
         onMovieSelected?(movie, genres)

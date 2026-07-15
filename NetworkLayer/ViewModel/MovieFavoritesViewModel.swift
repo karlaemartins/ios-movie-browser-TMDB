@@ -28,4 +28,11 @@ final class MovieFavoritesViewModel {
     func movie(at index: Int) -> Movie {
         favoriteMovies[index]
     }
+    
+    func removeFavorite(at index: Int) {
+        let movie = favoriteMovies[index]
+
+        favoritesStorage.remove(movie)
+        favoriteMovies.remove(at: index)
+    }
 }

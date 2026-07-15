@@ -119,11 +119,36 @@ extension MovieFavoritesViewController: UITableViewDataSource {
 extension MovieFavoritesViewController: UITableViewDelegate {
 
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
+        
+        tableView.deselectRow(at: indexPath, animated: true)
 
         let movie = viewModel.movie(at: indexPath.row)
 
         let detailVC = MovieDetailViewController(movie: movie, genres: "")
 
         navigationController?.pushViewController(detailVC, animated: true)
+    }
+
+    func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
+
+        let deleteAction = UIContextualAction(style: .destructive, title: "Remover") { [weak self] _, _, completion in
+
+            guard let self = self else {
+                completion(false)
+                return
+            }
+
+            self.viewModel.removeFavorite(at: indexPath.row)
+
+            tableView.deleteRows(at: [indexPath], with: .automatic)
+
+            self.updateEmptyState()
+
+            completion(true)
+        }
+
+        deleteAction.image = UIImage(systemName: "trash")
+
+        return UISwipeActionsConfiguration(actions: [deleteAction])
     }
 }
