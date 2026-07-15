@@ -16,6 +16,26 @@ class MovieFavoritesViewController: UIViewController {
         tableView.translatesAutoresizingMaskIntoConstraints = false
         return tableView
     }()
+    
+    private let emptyStateImageView: UIImageView = {
+        let imageView = UIImageView()
+        imageView.image = UIImage(systemName: "heart")
+        imageView.tintColor = .systemRed
+        imageView.contentMode = .scaleAspectFit
+        imageView.translatesAutoresizingMaskIntoConstraints = false
+        return imageView
+    }()
+
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.text = "Você ainda não possui\nfilmes favoritos.\n\nFavorite um filme para vê-lo aqui."
+        label.font = .systemFont(ofSize: 18)
+        label.textColor = .secondaryLabel
+        label.textAlignment = .center
+        label.numberOfLines = 0
+        label.translatesAutoresizingMaskIntoConstraints = false
+        return label
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -32,6 +52,7 @@ class MovieFavoritesViewController: UIViewController {
 
         viewModel.loadFavorites()
         tableView.reloadData()
+        updateEmptyState()
     }
     
     private func setupTableView() {
@@ -45,14 +66,33 @@ class MovieFavoritesViewController: UIViewController {
     }
 
     private func setupLayout() {
+        
         view.addSubview(tableView)
+        view.addSubview(emptyStateImageView)
+        view.addSubview(emptyStateLabel)
 
         NSLayoutConstraint.activate([
             tableView.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
-        ])
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            emptyStateImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateImageView.centerYAnchor.constraint(equalTo: view.centerYAnchor, constant: -40),
+            emptyStateImageView.widthAnchor.constraint(equalToConstant: 60),
+            emptyStateImageView.heightAnchor.constraint(equalToConstant: 60),
+
+            emptyStateLabel.topAnchor.constraint(equalTo: emptyStateImageView.bottomAnchor, constant: 20),
+            emptyStateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            emptyStateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)])
+    }
+    
+    private func updateEmptyState() {
+        let hasFavorites = viewModel.numberOfMovies > 0
+
+        tableView.isHidden = !hasFavorites
+        emptyStateImageView.isHidden = hasFavorites
+        emptyStateLabel.isHidden = hasFavorites
     }
 }
 
