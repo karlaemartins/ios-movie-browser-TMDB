@@ -6,8 +6,19 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXContainerItemProxy section */
+		119A7DE43007F3E600913404 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 111FB9DA2E1C528900BD8EF5 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = 111FB9E12E1C528900BD8EF5;
+			remoteInfo = NetworkLayer;
+		};
+/* End PBXContainerItemProxy section */
+
 /* Begin PBXFileReference section */
 		111FB9E22E1C528900BD8EF5 /* NetworkLayer.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NetworkLayer.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		119A7DE03007F3E600913404 /* MovieBrowserTMDBTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MovieBrowserTMDBTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
@@ -29,10 +40,22 @@
 			path = NetworkLayer;
 			sourceTree = "<group>";
 		};
+		119A7DE13007F3E600913404 /* MovieBrowserTMDBTests */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			path = MovieBrowserTMDBTests;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
 		111FB9DF2E1C528900BD8EF5 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		119A7DDD3007F3E600913404 /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -46,6 +69,7 @@
 			isa = PBXGroup;
 			children = (
 				111FB9E42E1C528900BD8EF5 /* NetworkLayer */,
+				119A7DE13007F3E600913404 /* MovieBrowserTMDBTests */,
 				111FB9E32E1C528900BD8EF5 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -54,6 +78,7 @@
 			isa = PBXGroup;
 			children = (
 				111FB9E22E1C528900BD8EF5 /* NetworkLayer.app */,
+				119A7DE03007F3E600913404 /* MovieBrowserTMDBTests.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -83,6 +108,29 @@
 			productReference = 111FB9E22E1C528900BD8EF5 /* NetworkLayer.app */;
 			productType = "com.apple.product-type.application";
 		};
+		119A7DDF3007F3E600913404 /* MovieBrowserTMDBTests */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 119A7DE83007F3E600913404 /* Build configuration list for PBXNativeTarget "MovieBrowserTMDBTests" */;
+			buildPhases = (
+				119A7DDC3007F3E600913404 /* Sources */,
+				119A7DDD3007F3E600913404 /* Frameworks */,
+				119A7DDE3007F3E600913404 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				119A7DE53007F3E600913404 /* PBXTargetDependency */,
+			);
+			fileSystemSynchronizedGroups = (
+				119A7DE13007F3E600913404 /* MovieBrowserTMDBTests */,
+			);
+			name = MovieBrowserTMDBTests;
+			packageProductDependencies = (
+			);
+			productName = MovieBrowserTMDBTests;
+			productReference = 119A7DE03007F3E600913404 /* MovieBrowserTMDBTests.xctest */;
+			productType = "com.apple.product-type.bundle.unit-test";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -95,6 +143,11 @@
 				TargetAttributes = {
 					111FB9E12E1C528900BD8EF5 = {
 						CreatedOnToolsVersion = 16.1;
+					};
+					119A7DDF3007F3E600913404 = {
+						CreatedOnToolsVersion = 16.1;
+						LastSwiftMigration = 1610;
+						TestTargetID = 111FB9E12E1C528900BD8EF5;
 					};
 				};
 			};
@@ -113,12 +166,20 @@
 			projectRoot = "";
 			targets = (
 				111FB9E12E1C528900BD8EF5 /* NetworkLayer */,
+				119A7DDF3007F3E600913404 /* MovieBrowserTMDBTests */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
 		111FB9E02E1C528900BD8EF5 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		119A7DDE3007F3E600913404 /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -135,7 +196,22 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		119A7DDC3007F3E600913404 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		119A7DE53007F3E600913404 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = 111FB9E12E1C528900BD8EF5 /* NetworkLayer */;
+			targetProxy = 119A7DE43007F3E600913404 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
 
 /* Begin XCBuildConfiguration section */
 		111FB9F62E1C528A00BD8EF5 /* Debug */ = {
@@ -311,6 +387,45 @@
 			};
 			name = Release;
 		};
+		119A7DE63007F3E600913404 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KA667JQ57A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = karlamartins.MovieBrowserTMDBTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkLayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NetworkLayer";
+			};
+			name = Debug;
+		};
+		119A7DE73007F3E600913404 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				BUNDLE_LOADER = "$(TEST_HOST)";
+				CLANG_ENABLE_MODULES = YES;
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 1;
+				DEVELOPMENT_TEAM = KA667JQ57A;
+				GENERATE_INFOPLIST_FILE = YES;
+				MARKETING_VERSION = 1.0;
+				PRODUCT_BUNDLE_IDENTIFIER = karlamartins.MovieBrowserTMDBTests;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_EMIT_LOC_STRINGS = NO;
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/NetworkLayer.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/NetworkLayer";
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -328,6 +443,15 @@
 			buildConfigurations = (
 				111FB9F62E1C528A00BD8EF5 /* Debug */,
 				111FB9F72E1C528A00BD8EF5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		119A7DE83007F3E600913404 /* Build configuration list for PBXNativeTarget "MovieBrowserTMDBTests" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				119A7DE63007F3E600913404 /* Debug */,
+				119A7DE73007F3E600913404 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
