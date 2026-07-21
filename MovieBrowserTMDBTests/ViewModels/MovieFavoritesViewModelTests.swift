@@ -9,19 +9,24 @@ import XCTest
 @testable import NetworkLayer
 
 final class MovieFavoritesViewModelTests: XCTestCase {
+    
+    // MARK: - Properties
+    private var mockStorage: MockFavoritesStorage!
+    private var sut: MovieFavoritesViewModel!
+    
+    // MARK: - Lifecycle
+    override func setUp() {
+            super.setUp()
 
+            mockStorage = MockFavoritesStorage()
+            sut = MovieFavoritesViewModel(favoritesStorage: mockStorage)
+        }
+
+    // MARK: - Tests
     func testLoadFavoritesUpdatesFavoriteMovies() {
         // Arrange
-        let mockStorage = MockFavoritesStorage()
-        let sut = MovieFavoritesViewModel(favoritesStorage: mockStorage)
         
-        let movie = Movie(
-            id: 1,
-            title: "Harry Potter",
-            releaseDate: "2001-11-16",
-            genreIDs: [14, 12],
-            posterPath: "/poster.jpg",
-            overview: "Um jovem descobre que é um bruxo.")
+        let movie = MovieFixture.makeMovie()
         
         mockStorage.favoriteMovies = [movie]
 
@@ -36,8 +41,6 @@ final class MovieFavoritesViewModelTests: XCTestCase {
     
     func testRemoveFavoriteRemovesMovie() {
         //Arrange
-        let mockStorage = MockFavoritesStorage()
-        let sut = MovieFavoritesViewModel(favoritesStorage: mockStorage)
 
         let movie = Movie(
             id: 1,
