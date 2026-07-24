@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct MovieDetail: Codable {
+struct MovieDetail: Codable, Equatable {
 
     let id: Int
     let voteAverage: Double

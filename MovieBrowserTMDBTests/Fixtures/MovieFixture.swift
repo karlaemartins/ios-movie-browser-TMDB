@@ -28,4 +28,19 @@ enum MovieFixture {
             overview: overview
         )
     }
+
+    static func makeMovieDetail(
+        id: Int = 1,
+        voteAverage: Double = 8.5,
+        runtime: Int? = 152,
+        originalLanguage: String = "en"
+    ) -> MovieDetail {
+
+        MovieDetail(
+            id: id,
+            voteAverage: voteAverage,
+            runtime: runtime,
+            originalLanguage: originalLanguage
+        )
+    }
 }
