@@ -11,7 +11,6 @@ import Foundation
 final class MockFavoritesStorage: FavoritesStorageProtocol {
 
     var favoriteMovies: [Movie] = []
-
     var saveCalled = false
     var removeCalled = false
 
