@@ -9,10 +9,9 @@ import Foundation
 
 final class MovieDetailViewModel {
 
-    private let apiKey = Secrets.apiKey
-    private let language = "pt-BR"
     private let genres: String
     private let favoritesStorage: FavoritesStorageProtocol
+    private let movieService: MovieServiceProtocol
 
     private(set) var movie: Movie
     private(set) var movieDetail: MovieDetail?
@@ -21,11 +20,13 @@ final class MovieDetailViewModel {
     init(
         movie: Movie,
         genres: String,
-        favoritesStorage: FavoritesStorageProtocol = FavoritesStorageService.shared
+        favoritesStorage: FavoritesStorageProtocol = FavoritesStorageService.shared,
+        movieService: MovieServiceProtocol = MovieService()
     ) {
         self.movie = movie
         self.genres = genres
         self.favoritesStorage = favoritesStorage
+        self.movieService = movieService
     }
     
     var title: String {
@@ -83,27 +84,19 @@ final class MovieDetailViewModel {
     }
     
     
-    
     func fetchMovieDetails(completion: @escaping () -> Void) {
 
-        let endpoint = Services.movieDetails(
-            id: movie.id,
-            apiKey: apiKey,
-            language: language
-        )
+        movieService.fetchMovieDetails(movieID: movie.id) { [weak self] result in
 
-        NetworkRequest.instance.dispatch(
-            endPoint: endpoint,
-            tipo: MovieDetail.self
-        ) { [weak self] response, _, error in
+            switch result {
 
-            if let error = error {
+            case .success(let movieDetail):
+                self?.movieDetail = movieDetail
+
+            case .failure(let error):
                 print("Erro ao buscar detalhes: \(error.localizedDescription)")
-                completion()
-                return
             }
 
-            self?.movieDetail = response
             completion()
         }
     }
