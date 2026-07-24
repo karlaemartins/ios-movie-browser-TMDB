@@ -27,7 +27,7 @@ final class MovieDetailViewModelTests: XCTestCase {
     
     func testIsFavoriteReturnsTrueWhenMovieIsFavorite() {
 
-        // Arrange
+        //Arrange
         let movie = MovieFixture.makeMovie()
 
         mockStorage.favoriteMovies = [movie]
@@ -38,8 +38,66 @@ final class MovieDetailViewModelTests: XCTestCase {
             favoritesStorage: mockStorage
         )
 
-        // Assert
+        //Assert
         XCTAssertTrue(sut.isFavorite)
+    }
+    
+    func testIsFavoriteReturnsFalseWhenMovieIsNotFavorite() {
+        
+        //Arrange
+        let movie = MovieFixture.makeMovie()
+
+        mockStorage.favoriteMovies = []
+
+        sut = MovieDetailViewModel(
+            movie: movie,
+            genres: "Fantasia",
+            favoritesStorage: mockStorage
+        )
+
+        //Assert
+        XCTAssertFalse(sut.isFavorite)
+        
+    }
+    
+    func testToggleFavoriteSavesMovieWhenMovieIsNotFavorite() {
+
+        //Arrange
+        let movie = MovieFixture.makeMovie()
+
+        sut = MovieDetailViewModel(
+            movie: movie,
+            genres: "Fantasia",
+            favoritesStorage: mockStorage
+        )
+
+        //Act
+        sut.toggleFavorite()
+
+        //Assert
+        XCTAssertTrue(mockStorage.saveCalled)
+        XCTAssertTrue(mockStorage.isFavorite(movie))
+    }
+    
+    func testToggleFavoriteRemovesMovieWhenMovieIsFavorite() {
+        
+        //Arrange
+        let movie = MovieFixture.makeMovie()
+
+        mockStorage.favoriteMovies = [movie]
+
+        sut = MovieDetailViewModel(
+            movie: movie,
+            genres: "Fantasia",
+            favoritesStorage: mockStorage
+        )
+        
+        //Act
+        sut.toggleFavorite()
+        
+        //Assert
+        XCTAssertTrue(mockStorage.removeCalled)
+        XCTAssertFalse(mockStorage.isFavorite(movie))
     }
 
 }
