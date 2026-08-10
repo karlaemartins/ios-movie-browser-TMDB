@@ -2,7 +2,7 @@
 //  FavoritesStorageProtocol.swift
 //  NetworkLayer
 //
-//  Created by Karla E. Martins Fernandes on 14/07/26.
+//  Created by Karla E. Martins Fernandes on 09/07/26.
 //
 
 import Foundation

@@ -8,15 +8,19 @@
 import Foundation
 
 protocol NetworkDispatch {
-    func dispatch<T: Codable>(endPoint: EndPoint, tipo: T.Type, resposta: @escaping (T?, HTTPURLResponse?, Error?) -> Void)
+    func dispatch<T: Codable>(endPoint: EndPoint, tipo: T.Type, resposta: @escaping (Result<T, NetworkError>) -> Void)
 }
 
 public struct NetworkRequest: NetworkDispatch {
     public static let instance = NetworkRequest()
     
-    func dispatch<T>(endPoint: EndPoint, tipo: T.Type, resposta: @escaping (T?, HTTPURLResponse?, Error?) -> Void) where T : Codable {
+    func dispatch<T>(endPoint: EndPoint, tipo: T.Type, resposta: @escaping (Result<T, NetworkError>) -> Void) where T : Codable {
         
-        guard var urlRequest = endPoint.request else { return }
+        guard var urlRequest = endPoint.request else {
+            resposta(.failure(.invalidURL))
+            return
+        }
+        
         urlRequest.httpMethod = endPoint.method.rawValue
         urlRequest.allHTTPHeaderFields = endPoint.headers
         
@@ -27,16 +31,31 @@ public struct NetworkRequest: NetworkDispatch {
         URLSession.shared.dataTask(with: urlRequest) { data, response, error in
             let httpResponse = response as? HTTPURLResponse
             
-            guard let data = data else {
-                resposta(nil, httpResponse, error)
+            guard let httpResponse else {
+                    resposta(.failure(.invalidResponse))
+                    return
+                }
+
+                guard (200...299).contains(httpResponse.statusCode) else {
+                    resposta(.failure(.httpError(statusCode: httpResponse.statusCode)))
+                    return
+                }
+            
+            if let error {
+                resposta(.failure(.underlying(error)))
+                return
+            }
+
+            guard let data else {
+                resposta(.failure(.noData))
                 return
             }
             
             do {
                 let decoded = try JSONDecoder().decode(T.self, from: data)
-                resposta(decoded, httpResponse, nil)
+                resposta(.success(decoded))
             } catch {
-                resposta(nil, httpResponse, error)
+                resposta(.failure(.decodingError(error)))
             }
             
         }.resume()
