@@ -15,9 +15,41 @@ final class MovieService: MovieServiceProtocol {
             self.network = network
         }
     
+    func fetchGenres(
+        completion: @escaping (Result<GenreResponse, NetworkError>) -> Void
+    ) {
+        let endpoint = Services.genres(
+            apiKey: Secrets.apiKey,
+            language: "pt-BR"
+        )
+
+        network.dispatch(
+            endPoint: endpoint,
+            tipo: GenreResponse.self,
+            resposta: completion
+        )
+    }
+    
+    func fetchPopularMovies(
+        page: Int = 1,
+        completion: @escaping (Result<MovieResponse, NetworkError>) -> Void
+    ) {
+        let endpoint = Services.popularMovies(
+            apiKey: Secrets.apiKey,
+            language: "pt-BR",
+            page: page
+        )
+
+        network.dispatch(
+            endPoint: endpoint,
+            tipo: MovieResponse.self,
+            resposta: completion
+        )
+    }
+    
     func fetchMovieDetails(
         movieID: Int,
-        completion: @escaping (Result<MovieDetail, Error>) -> Void
+        completion: @escaping (Result<MovieDetail, NetworkError>) -> Void
     ) {
 
         let endpoint = Services.movieDetails(
@@ -28,26 +60,8 @@ final class MovieService: MovieServiceProtocol {
 
         network.dispatch(
             endPoint: endpoint,
-            tipo: MovieDetail.self
-        ) { response, _, error in
-
-            if let error = error {
-                completion(.failure(error))
-                return
-            }
-
-            guard let response else {
-                completion(.failure(NSError(
-                    domain: "MovieService",
-                    code: -1,
-                    userInfo: [
-                        NSLocalizedDescriptionKey: "Resposta inválida."
-                    ]
-                )))
-                return
-            }
-
-            completion(.success(response))
-        }
+            tipo: MovieDetail.self,
+            resposta: completion
+        )
     }
 }

@@ -9,41 +9,42 @@ import Foundation
 
 class MovieListViewModel {
 
-    private let apiKey = Secrets.apiKey
-    private let language = "pt-BR"
+    private let movieService: MovieServiceProtocol
     
     var genres: [Genre] = []
     var popularMovies: [Movie] = []
+    
+    init(movieService: MovieServiceProtocol = MovieService()) {
+        self.movieService = movieService
+    }
 
     //Gêneros
     func fetchGenres(completion: @escaping () -> Void) {
-        let endpoint = Services.genres(apiKey: apiKey, language: language)
-        
-        NetworkRequest.instance.dispatch(endPoint: endpoint, tipo: GenreResponse.self) { [weak self] response, _, error in
-            if let error = error {
+        movieService.fetchGenres { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.genres = response.genres ?? []
+                completion()
+
+            case .failure(let error):
                 print("Erro ao buscar gêneros: \(error.localizedDescription)")
                 completion()
-                return
             }
-            
-            self?.genres = response?.genres ?? []
-            completion()
         }
     }
     
     //Filmes Populares
     func fetchPopularMovies(page: Int = 1, completion: @escaping () -> Void) {
-        let endpoint = Services.popularMovies(apiKey: apiKey, language: language, page: page)
-        
-        NetworkRequest.instance.dispatch(endPoint: endpoint, tipo: MovieResponse.self) { [weak self] response, _, error in
-            if let error = error {
+        movieService.fetchPopularMovies(page: page) { [weak self] result in
+            switch result {
+            case .success(let response):
+                self?.popularMovies = response.results
+                completion()
+
+            case .failure(let error):
                 print("Erro ao buscar filmes: \(error.localizedDescription)")
                 completion()
-                return
             }
-            
-            self?.popularMovies = response?.results ?? []
-            completion()
         }
     }
     
