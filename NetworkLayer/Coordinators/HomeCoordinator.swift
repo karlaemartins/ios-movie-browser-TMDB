@@ -29,6 +29,14 @@ class HomeCoordinator {
             guard let self = self else { return }
 
             let favoritesVC = MovieFavoritesViewController()
+            
+            favoritesVC.onMovieSelected = { [weak self] movie in
+                guard let self = self else { return }
+
+                let detailVC = MovieDetailViewController(movie: movie, genres: "")
+                self.navigationController.pushViewController(detailVC, animated: true)
+            }
+            
             self.navigationController.pushViewController(favoritesVC, animated: true)
         }
 

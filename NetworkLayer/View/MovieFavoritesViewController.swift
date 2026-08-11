@@ -8,6 +8,8 @@
 import UIKit
 
 class MovieFavoritesViewController: UIViewController {
+    
+    var onMovieSelected: ((Movie) -> Void)?
 
     private let viewModel = MovieFavoritesViewModel()
 
@@ -123,10 +125,7 @@ extension MovieFavoritesViewController: UITableViewDelegate {
         tableView.deselectRow(at: indexPath, animated: true)
 
         let movie = viewModel.movie(at: indexPath.row)
-
-        let detailVC = MovieDetailViewController(movie: movie, genres: "")
-
-        navigationController?.pushViewController(detailVC, animated: true)
+        onMovieSelected?(movie)
     }
 
     func tableView(_ tableView: UITableView, trailingSwipeActionsConfigurationForRowAt indexPath: IndexPath) -> UISwipeActionsConfiguration? {
