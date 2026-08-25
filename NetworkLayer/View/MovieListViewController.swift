@@ -9,6 +9,7 @@ import UIKit
 
 class MovieListViewController: UIViewController {
     
+    private let imageLoader: ImageLoading
     private let viewModel = MovieListViewModel()
     
     var onMovieSelected: ((Movie, String) -> Void)?
@@ -21,6 +22,15 @@ class MovieListViewController: UIViewController {
         tv.register(MovieTableViewCell.self, forCellReuseIdentifier: MovieTableViewCell.reuseIdentifier)
         return tv
     }()
+    
+    init(imageLoader: ImageLoading) {
+            self.imageLoader = imageLoader
+            super.init(nibName: nil, bundle: nil)
+        }
+
+        required init?(coder: NSCoder) {
+            fatalError("init(coder:) não foi implementado")
+        }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -85,7 +95,7 @@ extension MovieListViewController: UITableViewDataSource {
         
         let movie = viewModel.popularMovies[indexPath.row]
         let genres = viewModel.genreNames(for: movie).joined(separator: ", ")
-        cell.configure(with: movie, genreNames: genres)
+        cell.configure(with: movie, genreNames: genres, imageLoader: imageLoader)
         cell.accessoryType = .disclosureIndicator
         return cell
         

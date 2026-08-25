@@ -11,6 +11,7 @@ class MovieFavoritesViewController: UIViewController {
     
     var onMovieSelected: ((Movie) -> Void)?
 
+    private let imageLoader: ImageLoading
     private let viewModel = MovieFavoritesViewModel()
 
     private let tableView: UITableView = {
@@ -38,6 +39,15 @@ class MovieFavoritesViewController: UIViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
         return label
     }()
+    
+    init(imageLoader: ImageLoading) {
+        self.imageLoader = imageLoader
+        super.init(nibName: nil, bundle: nil)
+    }
+
+    required init?(coder: NSCoder) {
+        fatalError("init(coder:) não foi implementado")
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -112,7 +122,7 @@ extension MovieFavoritesViewController: UITableViewDataSource {
 
         let movie = viewModel.movie(at: indexPath.row)
 
-        cell.configure(with: movie, genreNames: "")
+        cell.configure(with: movie, genreNames: "", imageLoader: imageLoader)
 
         return cell
     }

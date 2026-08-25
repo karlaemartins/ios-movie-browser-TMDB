@@ -17,7 +17,13 @@ class AppCoordinator {
     }
 
     func start() {
-        let homeCoordinator = HomeCoordinator(navigationController: navigationController)
+        let imageLoader = ImageLoader()
+        
+        let homeCoordinator = HomeCoordinator(
+            navigationController: navigationController,
+            imageLoader: imageLoader
+        )
+        
         childCoordinators.append(homeCoordinator)
         homeCoordinator.start()
     }

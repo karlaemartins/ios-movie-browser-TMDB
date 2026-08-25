@@ -11,6 +11,9 @@ class MovieTableViewCell: UITableViewCell {
     
     static let reuseIdentifier = "MovieTableViewCell"
     
+    private var imageLoader: ImageLoading?
+    private var imageRequestID: UUID?
+    
     //Subviews
     let posterImageView: UIImageView = {
         let iv = UIImageView()
@@ -60,6 +63,8 @@ class MovieTableViewCell: UITableViewCell {
     override func prepareForReuse() {
         super.prepareForReuse()
 
+        imageLoader?.cancelLoad(for: imageRequestID)
+        imageRequestID = nil
         posterImageView.image = UIImage(systemName: "photo")
     }
     
@@ -85,8 +90,12 @@ class MovieTableViewCell: UITableViewCell {
     }
     
     //Configurações
-    func configure(with movie: Movie, genreNames: String) {
+    func configure(with movie: Movie, genreNames: String, imageLoader: ImageLoading) {
+        
+        self.imageLoader = imageLoader
+        
         titleLabel.text = movie.title
+        
         let year = movie.releaseDate?.prefix(4) ?? "N/A"
         detailsLabel.text = "\(genreNames) | \(year)"
         
@@ -97,7 +106,7 @@ class MovieTableViewCell: UITableViewCell {
 
         guard let url = URL(string: "https://image.tmdb.org/t/p/w200\(path)") else { return }
 
-        ImageLoader.shared.loadImage(from: url) { [weak self] image in
+        self.imageRequestID = self.imageLoader?.loadImage(from: url) { [weak self] image in
             self?.posterImageView.image = image
         }
     }
