@@ -12,6 +12,7 @@ class MovieDetailViewController: UIViewController {
     private let viewModel: MovieDetailViewModel
     private let movieService: MovieServiceProtocol
     private let favoritesStorage: FavoritesStorageProtocol
+    private let imageLoader: ImageLoading
 
     private let posterImageView: UIImageView = {
         let iv = UIImageView()
@@ -87,9 +88,10 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
 
-    init(movie: Movie, genres: String, movieService: MovieServiceProtocol, favoritesStorage: FavoritesStorageProtocol) {
+    init(movie: Movie, genres: String, movieService: MovieServiceProtocol, favoritesStorage: FavoritesStorageProtocol, imageLoader: ImageLoading) {
         self.movieService = movieService
         self.favoritesStorage = favoritesStorage
+        self.imageLoader = imageLoader
         self.viewModel = MovieDetailViewModel(movie: movie, genres: genres, movieService: movieService, favoritesStorage: favoritesStorage)
         super.init(nibName: nil, bundle: nil)
     }
@@ -101,46 +103,39 @@ class MovieDetailViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
-
         setupLayout()
         configure()
         configureNavigationBar()
         fetchMovieDetails()
     }
-    
+
     private func configureNavigationBar() {
         navigationController?.navigationBar.tintColor = .label
         updateFavoriteButton()
     }
-    
+
     private func updateFavoriteButton() {
         let isFavorite = viewModel.isFavorite
-
         let favoriteButton = UIBarButtonItem(
             image: UIImage(systemName: isFavorite ? "heart.fill" : "heart"),
             style: .plain,
             target: self,
             action: #selector(didTapFavorite)
         )
-
         favoriteButton.tintColor = isFavorite ? .systemRed : .label
-
         navigationItem.rightBarButtonItem = favoriteButton
     }
-    
+
     @objc
     private func didTapFavorite() {
         viewModel.toggleFavorite()
         updateFavoriteButton()
     }
 
-
     private func setupLayout() {
-
         detailsStackView.addArrangedSubview(ratingLabel)
         detailsStackView.addArrangedSubview(runtimeLabel)
         detailsStackView.addArrangedSubview(languageLabel)
-
         view.addSubview(posterImageView)
         view.addSubview(titleLabel)
         view.addSubview(infoLabel)
@@ -152,19 +147,15 @@ class MovieDetailViewController: UIViewController {
             posterImageView.centerXAnchor.constraint(equalTo: view.centerXAnchor),
             posterImageView.widthAnchor.constraint(equalToConstant: 200),
             posterImageView.heightAnchor.constraint(equalToConstant: 300),
-
             titleLabel.topAnchor.constraint(equalTo: posterImageView.bottomAnchor, constant: 16),
             titleLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             titleLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
             infoLabel.topAnchor.constraint(equalTo: titleLabel.bottomAnchor, constant: 8),
             infoLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             infoLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16),
-
             detailsStackView.topAnchor.constraint(equalTo: infoLabel.bottomAnchor, constant: 14),
             detailsStackView.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 14),
             detailsStackView.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -14),
-
             overviewLabel.topAnchor.constraint(equalTo: detailsStackView.bottomAnchor, constant: 16),
             overviewLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 16),
             overviewLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -16)
@@ -184,12 +175,11 @@ class MovieDetailViewController: UIViewController {
         )
 
         overviewLabel.attributedText = attributedString
-
         posterImageView.image = UIImage(systemName: "photo")
 
         guard let url = viewModel.posterURL else { return }
 
-        ImageLoader.shared.loadImage(from: url) { [weak self] image in
+        imageLoader.loadImage(from: url) { [weak self] image in
             self?.posterImageView.image = image
         }
     }
