@@ -17,16 +17,11 @@ final class MovieDetailViewModel {
     private(set) var movieDetail: MovieDetail?
    
 
-    init(
-        movie: Movie,
-        genres: String,
-        favoritesStorage: FavoritesStorageProtocol = FavoritesStorageService.shared,
-        movieService: MovieServiceProtocol = MovieService()
-    ) {
+    init(movie: Movie, genres: String, movieService: MovieServiceProtocol, favoritesStorage: FavoritesStorageProtocol) {
         self.movie = movie
         self.genres = genres
-        self.favoritesStorage = favoritesStorage
         self.movieService = movieService
+        self.favoritesStorage = favoritesStorage
     }
     
     var title: String {

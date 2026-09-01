@@ -12,7 +12,7 @@ class MovieFavoritesViewController: UIViewController {
     var onMovieSelected: ((Movie) -> Void)?
 
     private let imageLoader: ImageLoading
-    private let viewModel = MovieFavoritesViewModel()
+    private let viewModel: MovieFavoritesViewModel
 
     private let tableView: UITableView = {
         let tableView = UITableView()
@@ -40,8 +40,9 @@ class MovieFavoritesViewController: UIViewController {
         return label
     }()
     
-    init(imageLoader: ImageLoading) {
+    init(imageLoader: ImageLoading, favoritesStorage: FavoritesStorageProtocol) {
         self.imageLoader = imageLoader
+        self.viewModel = MovieFavoritesViewModel(favoritesStorage: favoritesStorage)
         super.init(nibName: nil, bundle: nil)
     }
 

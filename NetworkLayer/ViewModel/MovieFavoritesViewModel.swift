@@ -13,7 +13,7 @@ final class MovieFavoritesViewModel {
 
     private(set) var favoriteMovies: [Movie] = []
 
-    init(favoritesStorage: FavoritesStorageProtocol = FavoritesStorageService.shared) {
+    init(favoritesStorage: FavoritesStorageProtocol) {
         self.favoritesStorage = favoritesStorage
     }
     

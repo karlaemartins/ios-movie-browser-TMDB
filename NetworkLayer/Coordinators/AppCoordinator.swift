@@ -21,7 +21,9 @@ class AppCoordinator {
         
         let homeCoordinator = HomeCoordinator(
             navigationController: navigationController,
-            imageLoader: imageLoader
+            imageLoader: imageLoader,
+            movieService: MovieService(),
+            favoritesStorage: FavoritesStorageService.shared
         )
         
         childCoordinators.append(homeCoordinator)
