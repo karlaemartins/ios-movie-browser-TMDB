@@ -14,7 +14,7 @@ class MovieListViewModel {
     var genres: [Genre] = []
     var popularMovies: [Movie] = []
     
-    init(movieService: MovieServiceProtocol = MovieService()) {
+    init(movieService: MovieServiceProtocol) {
         self.movieService = movieService
     }
 

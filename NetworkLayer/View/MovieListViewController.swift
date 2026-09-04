@@ -10,7 +10,7 @@ import UIKit
 class MovieListViewController: UIViewController {
     
     private let imageLoader: ImageLoading
-    private let viewModel = MovieListViewModel()
+    private let viewModel: MovieListViewModel
     
     var onMovieSelected: ((Movie, String) -> Void)?
     var onFavoritesSelected: (() -> Void)?
@@ -23,8 +23,9 @@ class MovieListViewController: UIViewController {
         return tv
     }()
     
-    init(imageLoader: ImageLoading) {
+    init(imageLoader: ImageLoading, movieService: MovieServiceProtocol) {
             self.imageLoader = imageLoader
+            self.viewModel = MovieListViewModel(movieService: movieService)
             super.init(nibName: nil, bundle: nil)
         }
 

@@ -23,7 +23,7 @@ class HomeCoordinator {
     }
 
     func start() {
-        let movieListVC = MovieListViewController(imageLoader: imageLoader)
+        let movieListVC = MovieListViewController(imageLoader: imageLoader, movieService: movieService)
 
         movieListVC.onMovieSelected = { [weak self] movie, genres in
             guard let self = self else { return }

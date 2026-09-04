@@ -11,7 +11,7 @@ final class MovieService: MovieServiceProtocol {
 
     private let network: NetworkDispatch
 
-        init(network: NetworkDispatch = NetworkRequest.instance) {
+        init(network: NetworkDispatch) {
             self.network = network
         }
     
