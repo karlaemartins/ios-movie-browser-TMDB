@@ -9,23 +9,26 @@ import Foundation
 @testable import NetworkLayer
 
 final class MockFavoritesStorage: FavoritesStorageProtocol {
-
     var favoriteMovies: [Movie] = []
+    var isFavoriteResult = false
+    
     var saveCalled = false
     var removeCalled = false
+    var savedMovie: Movie?
+    var removedMovie: Movie?
 
     func save(_ movie: Movie) {
         saveCalled = true
-        favoriteMovies.append(movie)
+        savedMovie = movie
     }
 
     func remove(_ movie: Movie) {
         removeCalled = true
-        favoriteMovies.removeAll { $0.id == movie.id }
+        removedMovie = movie
     }
 
     func isFavorite(_ movie: Movie) -> Bool {
-        favoriteMovies.contains { $0.id == movie.id }
+        isFavoriteResult
     }
 
     func fetchFavorites() -> [Movie] {

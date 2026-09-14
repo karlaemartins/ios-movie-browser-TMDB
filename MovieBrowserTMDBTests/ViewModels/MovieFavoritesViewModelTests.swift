@@ -25,9 +25,7 @@ final class MovieFavoritesViewModelTests: XCTestCase {
     // MARK: - Tests
     func testLoadFavoritesUpdatesFavoriteMovies() {
         // Arrange
-        
         let movie = MovieFixture.makeMovie()
-        
         mockStorage.favoriteMovies = [movie]
 
         // Act
@@ -35,30 +33,21 @@ final class MovieFavoritesViewModelTests: XCTestCase {
         
         // Assert
         XCTAssertEqual(sut.numberOfMovies, 1)
-        XCTAssertEqual(sut.movie(at: 0).title, "Harry Potter")
+        XCTAssertEqual(sut.movie(at: 0).id, movie.id)
 
     }
     
     func testRemoveFavoriteRemovesMovie() {
-        //Arrange
-
-        let movie = Movie(
-            id: 1,
-            title: "Harry Potter",
-            releaseDate: "2001-11-16",
-            genreIDs: [14, 12],
-            posterPath: "/poster.jpg",
-            overview: "Um jovem descobre que é um bruxo.")
-
+        // Arrange
+        let movie = MovieFixture.makeMovie()
         mockStorage.favoriteMovies = [movie]
-
-        sut.loadFavorites()
         
-        //Act
+        // Act
+        sut.loadFavorites()
         sut.removeFavorite(at: 0)
         
-        //Assert
-        XCTAssertTrue(mockStorage.removeCalled)
+        // Assert
+        XCTAssertEqual(mockStorage.removedMovie?.id, movie.id)
         XCTAssertEqual(sut.numberOfMovies, 0)
         
     }

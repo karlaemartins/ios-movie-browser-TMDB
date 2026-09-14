@@ -34,36 +34,40 @@ final class MovieDetailViewModelTests: XCTestCase {
     //Verifica se a VM identifica corretamente um filme fav
     func testIsFavoriteReturnsTrueWhenMovieIsFavorite() {
 
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
-
-        mockStorage.favoriteMovies = [movie]
+        mockStorage.isFavoriteResult = true
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "Fantasia",
+            movieService: mockMovieService,
             favoritesStorage: mockStorage
         )
 
-        //Assert
+        // Act - A leitura de sut.isFavorite acontece no Assert.
+        
+        
+        // Assert
         XCTAssertTrue(sut.isFavorite)
     }
     
     //Verifica se a VM identifica corretamente um filme que n está fav
     func testIsFavoriteReturnsFalseWhenMovieIsNotFavorite() {
         
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
 
-        mockStorage.favoriteMovies = []
+        mockStorage.isFavoriteResult = false
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "Fantasia",
+            movieService: mockMovieService,
             favoritesStorage: mockStorage
         )
 
-        //Assert
+        // Assert
         XCTAssertFalse(sut.isFavorite)
         
     }
@@ -71,64 +75,66 @@ final class MovieDetailViewModelTests: XCTestCase {
     // Verifica se a VM salva o filme ao favoritar um filme que ainda n é fav
     func testToggleFavoriteSavesMovieWhenMovieIsNotFavorite() {
 
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
+        mockStorage.isFavoriteResult = false
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "Fantasia",
+            movieService: mockMovieService,
             favoritesStorage: mockStorage
         )
 
-        //Act
+        // Act
         sut.toggleFavorite()
 
-        //Assert
-        XCTAssertTrue(mockStorage.saveCalled)
-        XCTAssertTrue(mockStorage.isFavorite(movie))
+        // Assert
+        XCTAssertEqual(mockStorage.savedMovie?.id, movie.id)
     }
     
     // Verifica se a VM remove o filme ao desfavoritar um filme já fav
     func testToggleFavoriteRemovesMovieWhenMovieIsFavorite() {
         
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
 
-        mockStorage.favoriteMovies = [movie]
+        mockStorage.isFavoriteResult = true
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "Fantasia",
+            movieService: mockMovieService,
             favoritesStorage: mockStorage
         )
         
-        //Act
+        // Act
         sut.toggleFavorite()
         
-        //Assert
-        XCTAssertTrue(mockStorage.removeCalled)
-        XCTAssertFalse(mockStorage.isFavorite(movie))
+        // Assert
+        XCTAssertEqual(mockStorage.removedMovie?.id, movie.id)
     }
     
     
     // MARK: - Tests Fetch Movie Details
     
-    // Verifica se a VM solicita os dets do filme ao MovieService
-    func testFetchMovieDetails_WhenSucess_CallsMovieService() {
+    // Verifica se a VM solicita os dets do filme ao MovieService com o ID correto do filme
+    func testFetchMovieDetailsCallsMovieServiceWithMovieID() {
 
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "",
-            favoritesStorage: mockStorage,
-            movieService: mockMovieService)
+            movieService: mockMovieService,
+            favoritesStorage: mockStorage
+        )
         
-        //Act
+        // Act
         sut.fetchMovieDetails(completion: {})
         
-        //Assert
+        // Assert
         XCTAssertTrue(mockMovieService.fetchMovieDetailsCalled)
         XCTAssertEqual(mockMovieService.receivedMovieID, movie.id)
     }
@@ -136,7 +142,7 @@ final class MovieDetailViewModelTests: XCTestCase {
     // Verifica se a VM atualiza os dets do filme quando a requisição é ok
     func testFetchMovieDetailsUpdatesMovieDetailOnSuccess() {
 
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
         let movieDetail = MovieFixture.makeMovieDetail()
 
@@ -145,64 +151,63 @@ final class MovieDetailViewModelTests: XCTestCase {
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "",
-            favoritesStorage: mockStorage,
-            movieService: mockMovieService
+            movieService: mockMovieService,
+            favoritesStorage: mockStorage
         )
 
-        //Act
+        // Act
         sut.fetchMovieDetails(completion: {})
 
-        //Assert
+        // Assert
         XCTAssertEqual(sut.movieDetail, movieDetail)
     }
     
     // Verifica se a VM mantém os dets vazios quando a requisição falha
     func testFetchMovieDetailsDoesNotUpdateMovieDetailOnFailure() {
 
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
 
-        mockMovieService.result = .failure(TestError.someError)
+        mockMovieService.result = .failure(.noData)
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "",
-            favoritesStorage: mockStorage,
-            movieService: mockMovieService
+            movieService: mockMovieService,
+            favoritesStorage: mockStorage
         )
 
-        //Act
+        // Act
         sut.fetchMovieDetails(completion: {})
 
-        //Assert
+        // Assert
         XCTAssertNil(sut.movieDetail)
     }
     
     // Verifica se a VM executa o completion ao finalizar a busca dos dets
     func testFetchMovieDetailsCallsCompletion() {
 
-        //Arrange
+        // Arrange
         let movie = MovieFixture.makeMovie()
         let movieDetail = MovieFixture.makeMovieDetail()
-
-        mockMovieService.result = .success(movieDetail)
+            mockMovieService.result = .success(movieDetail)
 
         sut = MovieDetailViewModel(
             movie: movie,
             genres: "",
-            favoritesStorage: mockStorage,
-            movieService: mockMovieService
+            movieService: mockMovieService,
+            favoritesStorage: mockStorage
         )
+        
+        var completionCalled = false
 
-        let expectation = expectation(description: "Completion should be called")
-
-        //Act
+        // Act
         sut.fetchMovieDetails {
-            expectation.fulfill()
+            completionCalled = true
         }
 
-        //Assert
-        wait(for: [expectation], timeout: 1.0)
+        // Assert
+        XCTAssertTrue(completionCalled)
     }
 
 }
