@@ -146,7 +146,7 @@ final class MovieDetailViewModelTests: XCTestCase {
         let movie = MovieFixture.makeMovie()
         let movieDetail = MovieFixture.makeMovieDetail()
 
-        mockMovieService.result = .success(movieDetail)
+        mockMovieService.movieDetailsResult = .success(movieDetail)
 
         sut = MovieDetailViewModel(
             movie: movie,
@@ -168,7 +168,7 @@ final class MovieDetailViewModelTests: XCTestCase {
         // Arrange
         let movie = MovieFixture.makeMovie()
 
-        mockMovieService.result = .failure(.noData)
+        mockMovieService.movieDetailsResult = .failure(.noData)
 
         sut = MovieDetailViewModel(
             movie: movie,
@@ -190,7 +190,7 @@ final class MovieDetailViewModelTests: XCTestCase {
         // Arrange
         let movie = MovieFixture.makeMovie()
         let movieDetail = MovieFixture.makeMovieDetail()
-            mockMovieService.result = .success(movieDetail)
+            mockMovieService.movieDetailsResult = .success(movieDetail)
 
         sut = MovieDetailViewModel(
             movie: movie,

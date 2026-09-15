@@ -14,7 +14,7 @@ enum MovieFixture {
         id: Int = 1,
         title: String = "Harry Potter",
         releaseDate: String? = "2001-11-16",
-        genreIDs: [Int] = [14, 12],
+        genreIDs: [Int]? = [14, 12],
         posterPath: String? = "/poster.jpg",
         overview: String? = "Um jovem descobre que é um bruxo."
     ) -> Movie {

@@ -10,10 +10,47 @@ import Foundation
 
 final class MockMovieService: MovieServiceProtocol {
 
-    var result: Result<MovieDetail, NetworkError>?
+    // MARK: - Results
+    
+    var genresResult: Result<GenreResponse, NetworkError>?
+    var popularMoviesResult: Result<MovieResponse, NetworkError>?
+    var movieDetailsResult: Result<MovieDetail, NetworkError>?
 
+    // MARK: - Calls
+    
+    var fetchGenresCalled = false
+    var fetchPopularMoviesCalled = false
     var fetchMovieDetailsCalled = false
+    
+    // MARK: - Received Values
+    
+    var receivedPage: Int?
     var receivedMovieID: Int?
+    
+    // MARK: - Methods
+    
+    func fetchGenres(
+        completion: @escaping (Result<GenreResponse, NetworkError>) -> Void
+    ) {
+        fetchGenresCalled = true
+        
+        if let genresResult {
+            completion(genresResult)
+        }
+    }
+    
+    func fetchPopularMovies(
+           page: Int,
+           completion: @escaping (Result<MovieResponse, NetworkError>) -> Void
+       ) {
+           fetchPopularMoviesCalled = true
+           receivedPage = page
+
+           if let popularMoviesResult {
+               completion(popularMoviesResult)
+           }
+       }
+                
 
     func fetchMovieDetails(
         movieID: Int,
@@ -22,19 +59,8 @@ final class MockMovieService: MovieServiceProtocol {
         fetchMovieDetailsCalled = true
         receivedMovieID = movieID
 
-        if let result {
-            completion(result)
+        if let movieDetailsResult {
+            completion(movieDetailsResult)
         }
-    }
-
-    func fetchGenres(
-        completion: @escaping (Result<GenreResponse, NetworkError>) -> Void
-    ) {
-    }
-
-    func fetchPopularMovies(
-        page: Int,
-        completion: @escaping (Result<MovieResponse, NetworkError>) -> Void
-    ) {
     }
 }
