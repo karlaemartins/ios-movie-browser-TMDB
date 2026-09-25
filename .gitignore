@@ -16,3 +16,6 @@ xcuserdata/
 
 # CocoaPods
 Pods/
+
+# Snapshot Testing
+MovieBrowserTMDBTests/FailureDiffs/

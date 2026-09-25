@@ -1,0 +1,38 @@
+{
+  "configurations" : [
+    {
+      "id" : "19FC60EA-6A33-4CA3-8D6F-EDFF3E6F8F87",
+      "name" : "Configuration 1",
+      "options" : {
+        "environmentVariableEntries" : [
+          {
+            "key" : "FB_REFERENCE_IMAGE_DIR",
+            "value" : "$(SOURCE_ROOT)\/MovieBrowserTMDBTests\/ReferenceImages"
+          },
+          {
+            "key" : "IMAGE_DIFF_DIR",
+            "value" : "$(SOURCE_ROOT)\/MovieBrowserTMDBTests\/FailureDiffs"
+          }
+        ],
+        "targetForVariableExpansion" : {
+          "containerPath" : "container:NetworkLayer.xcodeproj",
+          "identifier" : "119A7DDF3007F3E600913404",
+          "name" : "MovieBrowserTMDBTests"
+        }
+      }
+    }
+  ],
+  "defaultOptions" : {
+
+  },
+  "testTargets" : [
+    {
+      "target" : {
+        "containerPath" : "container:NetworkLayer.xcodeproj",
+        "identifier" : "119A7DDF3007F3E600913404",
+        "name" : "MovieBrowserTMDBTests"
+      }
+    }
+  ],
+  "version" : 1
+}
