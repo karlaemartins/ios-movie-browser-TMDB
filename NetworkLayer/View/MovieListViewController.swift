@@ -23,11 +23,11 @@ class MovieListViewController: UIViewController {
         return tv
     }()
     
-    init(imageLoader: ImageLoading, movieService: MovieServiceProtocol) {
-            self.imageLoader = imageLoader
-            self.viewModel = MovieListViewModel(movieService: movieService)
-            super.init(nibName: nil, bundle: nil)
-        }
+    init(imageLoader: ImageLoading, viewModel: MovieListViewModel) {
+        self.imageLoader = imageLoader
+        self.viewModel = viewModel
+        super.init(nibName: nil, bundle: nil)
+    }
 
         required init?(coder: NSCoder) {
             fatalError("init(coder:) não foi implementado")
