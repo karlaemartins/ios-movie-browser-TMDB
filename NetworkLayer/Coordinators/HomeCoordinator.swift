@@ -35,7 +35,17 @@ class HomeCoordinator {
         movieListVC.onMovieSelected = { [weak self] movie, genres in
             guard let self = self else { return }
 
-            let detailVC = MovieDetailViewController(movie: movie, genres: genres, movieService: self.movieService, favoritesStorage: self.favoritesStorage, imageLoader: self.imageLoader)
+            let detailViewModel = MovieDetailViewModel(
+                movie: movie,
+                genres: genres,
+                movieService: self.movieService,
+                favoritesStorage: self.favoritesStorage
+            )
+
+            let detailVC = MovieDetailViewController(
+                viewModel: detailViewModel,
+                imageLoader: self.imageLoader
+            )
 
             self.navigationController.pushViewController(detailVC, animated: true)
         }
@@ -55,7 +65,17 @@ class HomeCoordinator {
             favoritesVC.onMovieSelected = { [weak self] movie in
                 guard let self = self else { return }
 
-                let detailVC = MovieDetailViewController(movie: movie, genres: "", movieService: self.movieService, favoritesStorage: self.favoritesStorage, imageLoader: self.imageLoader)
+                let detailViewModel = MovieDetailViewModel(
+                    movie: movie,
+                    genres: "",
+                    movieService: self.movieService,
+                    favoritesStorage: self.favoritesStorage
+                )
+
+                let detailVC = MovieDetailViewController(
+                    viewModel: detailViewModel,
+                    imageLoader: self.imageLoader
+                )
 
                 self.navigationController.pushViewController(detailVC, animated: true)
             }

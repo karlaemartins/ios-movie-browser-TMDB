@@ -10,8 +10,6 @@ import UIKit
 class MovieDetailViewController: UIViewController {
 
     private let viewModel: MovieDetailViewModel
-    private let movieService: MovieServiceProtocol
-    private let favoritesStorage: FavoritesStorageProtocol
     private let imageLoader: ImageLoading
 
     private let posterImageView: UIImageView = {
@@ -88,11 +86,9 @@ class MovieDetailViewController: UIViewController {
         return label
     }()
 
-    init(movie: Movie, genres: String, movieService: MovieServiceProtocol, favoritesStorage: FavoritesStorageProtocol, imageLoader: ImageLoading) {
-        self.movieService = movieService
-        self.favoritesStorage = favoritesStorage
+    init(viewModel: MovieDetailViewModel, imageLoader: ImageLoading) {
+        self.viewModel = viewModel
         self.imageLoader = imageLoader
-        self.viewModel = MovieDetailViewModel(movie: movie, genres: genres, movieService: movieService, favoritesStorage: favoritesStorage)
         super.init(nibName: nil, bundle: nil)
     }
 
