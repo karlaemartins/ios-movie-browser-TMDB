@@ -43,7 +43,14 @@ class HomeCoordinator {
         movieListVC.onFavoritesSelected = { [weak self] in
             guard let self = self else { return }
 
-            let favoritesVC = MovieFavoritesViewController(imageLoader: self.imageLoader, favoritesStorage: self.favoritesStorage)
+            let favoritesViewModel = MovieFavoritesViewModel(
+                favoritesStorage: self.favoritesStorage
+            )
+
+            let favoritesVC = MovieFavoritesViewController(
+                imageLoader: self.imageLoader,
+                viewModel: favoritesViewModel
+            )
 
             favoritesVC.onMovieSelected = { [weak self] movie in
                 guard let self = self else { return }

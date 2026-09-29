@@ -40,9 +40,9 @@ class MovieFavoritesViewController: UIViewController {
         return label
     }()
     
-    init(imageLoader: ImageLoading, favoritesStorage: FavoritesStorageProtocol) {
+    init(imageLoader: ImageLoading, viewModel: MovieFavoritesViewModel) {
         self.imageLoader = imageLoader
-        self.viewModel = MovieFavoritesViewModel(favoritesStorage: favoritesStorage)
+        self.viewModel = viewModel
         super.init(nibName: nil, bundle: nil)
     }
 
