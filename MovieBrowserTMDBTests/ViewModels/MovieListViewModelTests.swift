@@ -86,9 +86,9 @@ final class MovieListViewModelTests: XCTestCase {
         }
 
         // Assert
-        XCTAssertEqual(sut.popularMovies.count, 2)
-        XCTAssertEqual(sut.popularMovies[0].id, movies[0].id)
-        XCTAssertEqual(sut.popularMovies[1].id, movies[1].id)
+        XCTAssertEqual(sut.numberOfMovies, 2)
+        XCTAssertEqual(sut.movie(at: 0).id, movies[0].id)
+        XCTAssertEqual(sut.movie(at: 1).id, movies[1].id)
         XCTAssertTrue(completionCalled)
     }
     
@@ -146,12 +146,15 @@ final class MovieListViewModelTests: XCTestCase {
             Genre(id: 12, name: "Aventura"),
             Genre(id: 28, name: "Ação")
         ]
-
-        sut.genres = genres
+        
+        mockMovieService.genresResult = .success(
+               GenreResponse(genres: genres)
+           )
 
         let movie = MovieFixture.makeMovie(genreIDs: [14, 12])
 
         // Act
+        sut.fetchGenres {}
         let result = sut.genreNames(for: movie)
 
         // Assert
@@ -175,7 +178,7 @@ final class MovieListViewModelTests: XCTestCase {
         // Arrange
         mockMovieService.genresResult = .success(GenreResponse(genres: nil))
 
-        // Act
+        // ActtestFetchPopularMoviesUpdatesMoviesOnSuccess
         sut.fetchGenres {}
 
         // Assert

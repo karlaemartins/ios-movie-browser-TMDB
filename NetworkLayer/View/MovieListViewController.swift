@@ -85,7 +85,7 @@ class MovieListViewController: UIViewController {
 //Configurações da tabela com UITableViewDataSource
 extension MovieListViewController: UITableViewDataSource {
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return viewModel.popularMovies.count
+        return viewModel.numberOfMovies
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -94,7 +94,7 @@ extension MovieListViewController: UITableViewDataSource {
             return UITableViewCell()
         }
         
-        let movie = viewModel.popularMovies[indexPath.row]
+        let movie = viewModel.movie(at: indexPath.row)
         let genres = viewModel.genreNames(for: movie).joined(separator: ", ")
         cell.configure(with: movie, genreNames: genres, imageLoader: imageLoader)
         cell.accessoryType = .disclosureIndicator
@@ -107,7 +107,7 @@ extension MovieListViewController: UITableViewDataSource {
 extension MovieListViewController: UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-        let movie = viewModel.popularMovies[indexPath.row]
+        let movie = viewModel.movie(at: indexPath.row)
         let genres = viewModel.genreNames(for: movie).joined(separator: ", ")
         onMovieSelected?(movie, genres)
     }

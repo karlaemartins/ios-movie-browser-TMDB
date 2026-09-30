@@ -11,8 +11,16 @@ class MovieListViewModel {
 
     private let movieService: MovieServiceProtocol
     
-    var genres: [Genre] = []
-    var popularMovies: [Movie] = []
+    private(set) var genres: [Genre] = []
+    private(set) var popularMovies: [Movie] = []
+    
+    var numberOfMovies: Int {
+        popularMovies.count
+    }
+
+    func movie(at index: Int) -> Movie {
+        popularMovies[index]
+    }
     
     init(movieService: MovieServiceProtocol) {
         self.movieService = movieService
