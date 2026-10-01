@@ -13,6 +13,7 @@ class MovieListViewModel {
     
     private(set) var genres: [Genre] = []
     private(set) var popularMovies: [Movie] = []
+    private(set) var state: ViewState = .idle
     
     var numberOfMovies: Int {
         popularMovies.count
@@ -27,41 +28,56 @@ class MovieListViewModel {
     }
 
     //Gêneros
-    func fetchGenres(completion: @escaping () -> Void) {
+    func fetchGenres(completion: @escaping (Result<Void, NetworkError>) -> Void){
         movieService.fetchGenres { [weak self] result in
             switch result {
             case .success(let response):
                 self?.genres = response.genres ?? []
-                completion()
+                completion(.success(()))
 
             case .failure(let error):
                 print("Erro ao buscar gêneros: \(error.localizedDescription)")
-                completion()
+                completion(.failure(error))
             }
         }
     }
     
     //Filmes Populares
-    func fetchPopularMovies(page: Int = 1, completion: @escaping () -> Void) {
+    func fetchPopularMovies(page: Int = 1, completion: @escaping (Result<Void, NetworkError>) -> Void){
         movieService.fetchPopularMovies(page: page) { [weak self] result in
             switch result {
             case .success(let response):
                 self?.popularMovies = response.results
-                completion()
+                completion(.success(()))
 
             case .failure(let error):
                 print("Erro ao buscar filmes: \(error.localizedDescription)")
-                completion()
+                completion(.failure(error))
             }
         }
     }
     
     //generos e filmes populares
     func fetchData(completion: @escaping () -> Void) {
-        //busca dos generos
-        fetchGenres { [weak self] in
-            //busca dos filmes populares
-            self?.fetchPopularMovies {
+        state = .loading
+
+        fetchGenres { [weak self] result in
+            switch result {
+            case .success:
+                self?.fetchPopularMovies { result in
+                    switch result {
+                    case .success:
+                        self?.state = .loaded
+                        completion()
+                        
+                    case .failure:
+                        self?.state = .error("Não foi possível carregar os filmes.")
+                        completion()
+                    }
+                }
+
+            case .failure:
+                self?.state = .error("Não foi possível carregar os gêneros.")
                 completion()
             }
         }

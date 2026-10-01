@@ -39,7 +39,7 @@ final class MovieListViewModelTests: XCTestCase {
         // Act
         var completionCalled = false
 
-        sut.fetchGenres {
+        sut.fetchGenres { _ in
             completionCalled = true
         }
 
@@ -58,7 +58,7 @@ final class MovieListViewModelTests: XCTestCase {
         var completionCalled = false
 
         // Act
-        sut.fetchGenres {
+        sut.fetchGenres { _ in
             completionCalled = true
         }
 
@@ -81,7 +81,7 @@ final class MovieListViewModelTests: XCTestCase {
         // Act
         var completionCalled = false
 
-        sut.fetchPopularMovies {
+        sut.fetchPopularMovies { _ in
             completionCalled = true
         }
 
@@ -99,7 +99,7 @@ final class MovieListViewModelTests: XCTestCase {
         mockMovieService.popularMoviesResult = .success(MovieResponse(results: []))
 
         // Act
-        sut.fetchPopularMovies(page: page, completion: {})
+        sut.fetchPopularMovies(page: page, completion: { _ in })
 
         // Assert
         XCTAssertTrue(mockMovieService.fetchPopularMoviesCalled)
@@ -113,7 +113,7 @@ final class MovieListViewModelTests: XCTestCase {
         var completionCalled = false
 
         // Act
-        sut.fetchPopularMovies {
+        sut.fetchPopularMovies { _ in
             completionCalled = true
         }
 
@@ -137,6 +137,25 @@ final class MovieListViewModelTests: XCTestCase {
         XCTAssertTrue(mockMovieService.fetchGenresCalled)
         XCTAssertTrue(mockMovieService.fetchPopularMoviesCalled)
         XCTAssertTrue(completionCalled)
+        XCTAssertEqual(sut.state, .loaded)
+    }
+    
+    func testFetchDataSetsErrorStateWhenGenresFail() {
+        mockMovieService.genresResult = .failure(.noData)
+        
+        sut.fetchData {}
+        
+        XCTAssertEqual(sut.state, .error("Não foi possível carregar os gêneros."))
+        XCTAssertFalse(mockMovieService.fetchPopularMoviesCalled)
+    }
+    
+    func testFetchDataSetsErrorStateWhenPopularMoviesFail() {
+        mockMovieService.genresResult = .success(GenreResponse(genres: []))
+        mockMovieService.popularMoviesResult = .failure(.noData)
+
+        sut.fetchData {}
+
+        XCTAssertEqual(sut.state, .error("Não foi possível carregar os filmes."))
     }
     
     func testGenreNamesReturnsMatchingGenreNames() {
@@ -154,7 +173,7 @@ final class MovieListViewModelTests: XCTestCase {
         let movie = MovieFixture.makeMovie(genreIDs: [14, 12])
 
         // Act
-        sut.fetchGenres {}
+        sut.fetchGenres { _ in }
         let result = sut.genreNames(for: movie)
 
         // Assert
@@ -179,7 +198,7 @@ final class MovieListViewModelTests: XCTestCase {
         mockMovieService.genresResult = .success(GenreResponse(genres: nil))
 
         // ActtestFetchPopularMoviesUpdatesMoviesOnSuccess
-        sut.fetchGenres {}
+        sut.fetchGenres { _ in }
 
         // Assert
         XCTAssertTrue(sut.genres.isEmpty)
