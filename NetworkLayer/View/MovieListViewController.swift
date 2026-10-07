@@ -23,6 +23,23 @@ class MovieListViewController: UIViewController {
         return tv
     }()
     
+    private let loadingIndicator: UIActivityIndicatorView = {
+        let indicator = UIActivityIndicatorView(style: .large)
+        indicator.translatesAutoresizingMaskIntoConstraints = false
+        indicator.hidesWhenStopped = true
+        return indicator
+    }()
+    
+    private let emptyStateLabel: UILabel = {
+        let label = UILabel()
+        label.translatesAutoresizingMaskIntoConstraints = false
+        label.text = "Nenhum filme encontrado."
+        label.textAlignment = .center
+        label.textColor = .secondaryLabel
+        label.numberOfLines = 0
+        return label
+    }()
+    
     init(imageLoader: ImageLoading, viewModel: MovieListViewModel) {
         self.imageLoader = imageLoader
         self.viewModel = viewModel
@@ -39,6 +56,13 @@ class MovieListViewController: UIViewController {
         navigationItem.backButtonTitle = ""
         setupTableView()
         configureNavigationBar()
+        
+        viewModel.onStateChange = { [weak self] state in
+               DispatchQueue.main.async {
+                   self?.render(state: state)
+               }
+           }
+        
         fetchMovies()
     }
     
@@ -62,23 +86,66 @@ class MovieListViewController: UIViewController {
     
     private func setupTableView() {
         view.addSubview(tableView)
+        view.addSubview(loadingIndicator)
+        view.addSubview(emptyStateLabel)
         tableView.dataSource = self
         tableView.delegate = self
         
         NSLayoutConstraint.activate([
+            loadingIndicator.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            loadingIndicator.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+    
             tableView.topAnchor.constraint(equalTo: view.topAnchor),
             tableView.leadingAnchor.constraint(equalTo: view.leadingAnchor),
             tableView.trailingAnchor.constraint(equalTo: view.trailingAnchor),
-            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor)
+            tableView.bottomAnchor.constraint(equalTo: view.bottomAnchor),
+            
+            emptyStateLabel.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            emptyStateLabel.centerYAnchor.constraint(equalTo: view.centerYAnchor),
+            emptyStateLabel.leadingAnchor.constraint(equalTo: view.leadingAnchor, constant: 32),
+            emptyStateLabel.trailingAnchor.constraint(equalTo: view.trailingAnchor, constant: -32)
         ])
     }
     
     private func fetchMovies() {
-        viewModel.fetchData {
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
+        viewModel.fetchData {}
+    }
+    
+    private func render(state: ViewState) {
+        switch state {
+        case .idle:
+            break
+
+        case .loading:
+            emptyStateLabel.isHidden = true
+            loadingIndicator.startAnimating()
+
+        case .loaded:
+            loadingIndicator.stopAnimating()
+            emptyStateLabel.isHidden = true
+            tableView.reloadData()
+
+        case .empty:
+            loadingIndicator.stopAnimating()
+            emptyStateLabel.isHidden = false
+
+        case .error(let message):
+            loadingIndicator.stopAnimating()
+            emptyStateLabel.isHidden = true
+            showError(message)
         }
+    }
+    
+    private func showError(_ message: String) {
+        let alert = UIAlertController(
+            title: "Erro",
+            message: message,
+            preferredStyle: .alert
+        )
+
+        alert.addAction(UIAlertAction(title: "OK", style: .default))
+
+        present(alert, animated: true)
     }
 }
 

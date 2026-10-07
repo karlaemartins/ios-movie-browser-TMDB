@@ -15,6 +15,8 @@ class MovieListViewModel {
     private(set) var popularMovies: [Movie] = []
     private(set) var state: ViewState = .idle
     
+    var onStateChange: ((ViewState) -> Void)?
+    
     var numberOfMovies: Int {
         popularMovies.count
     }
@@ -25,6 +27,12 @@ class MovieListViewModel {
     
     init(movieService: MovieServiceProtocol) {
         self.movieService = movieService
+    }
+    
+    //Estado
+    private func updateState(_ newState: ViewState) {
+        state = newState
+        onStateChange?(newState)
     }
 
     //Gêneros
@@ -59,7 +67,7 @@ class MovieListViewModel {
     
     //generos e filmes populares
     func fetchData(completion: @escaping () -> Void) {
-        state = .loading
+        updateState(.loading)
 
         fetchGenres { [weak self] result in
             switch result {
@@ -67,17 +75,21 @@ class MovieListViewModel {
                 self?.fetchPopularMovies { result in
                     switch result {
                     case .success:
-                        self?.state = .loaded
+                        if self?.popularMovies.isEmpty == true {
+                            self?.updateState(.empty)
+                        } else {
+                            self?.updateState(.loaded)
+                        }
                         completion()
                         
                     case .failure:
-                        self?.state = .error("Não foi possível carregar os filmes.")
+                        self?.updateState(.error("Não foi possível carregar os filmes."))
                         completion()
                     }
                 }
 
             case .failure:
-                self?.state = .error("Não foi possível carregar os gêneros.")
+                self?.updateState(.error("Não foi possível carregar os gêneros."))
                 completion()
             }
         }

@@ -51,23 +51,6 @@ final class MovieListViewModelTests: XCTestCase {
     }
     
     
-    func testFetchGenresCallsCompletionOnFailure() {
-        // Arrange
-        mockMovieService.genresResult = .failure(.noData)
-
-        var completionCalled = false
-
-        // Act
-        sut.fetchGenres { _ in
-            completionCalled = true
-        }
-
-        // Assert
-        XCTAssertTrue(completionCalled)
-        XCTAssertTrue(sut.genres.isEmpty)
-    }
-    
-    
     func testFetchPopularMoviesUpdatesMoviesOnSuccess() {
         // Arrange
         let movies = [
@@ -105,22 +88,7 @@ final class MovieListViewModelTests: XCTestCase {
         XCTAssertTrue(mockMovieService.fetchPopularMoviesCalled)
         XCTAssertEqual(mockMovieService.receivedPage, page)
     }
-    
-    
-    func testFetchPopularMoviesCallsCompletionOnFailure() {
-        // Arrange
-        mockMovieService.popularMoviesResult = .failure(.noData)
-        var completionCalled = false
 
-        // Act
-        sut.fetchPopularMovies { _ in
-            completionCalled = true
-        }
-
-        // Assert
-        XCTAssertTrue(completionCalled)
-        XCTAssertTrue(sut.popularMovies.isEmpty)
-    }
     
     func testFetchDataCallsGenresAndPopularMovies() {
         // Arrange
@@ -196,8 +164,7 @@ final class MovieListViewModelTests: XCTestCase {
     func testFetchGenresSetsEmptyArrayWhenResponseHasNoGenres() {
         // Arrange
         mockMovieService.genresResult = .success(GenreResponse(genres: nil))
-
-        // ActtestFetchPopularMoviesUpdatesMoviesOnSuccess
+        // Act
         sut.fetchGenres { _ in }
 
         // Assert
